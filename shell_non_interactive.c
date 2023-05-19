@@ -3,14 +3,13 @@
 /**
  * shell_non_interactive - runs shell on non-interactive mode.
  * @info: a pointer to struct that contains all current shell info.
- * @file: a pointer to the file.
+ * @fd: tha file descriptor.
  */
-void shell_non_interactive(info_t *info, FILE *file)
+void shell_non_interactive(info_t *info, int fd)
 {
 	char *line = NULL;
-	size_t n;
 
-	while (getline(&line, &n, file) != -1)
+	while ((line = readline(fd)) != NULL)
 	{
 		(info->line_number)++;
 
@@ -21,10 +20,8 @@ void shell_non_interactive(info_t *info, FILE *file)
 
 		/* next line just for testing */
 		printf("%s: %d: %s", info->file_name, info->line_number, line);
+		fflush(stdout);
 
 		free(line);
-		line = NULL;
 	}
-
-	free(line);
 }

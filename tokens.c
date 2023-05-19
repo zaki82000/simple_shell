@@ -11,9 +11,9 @@
 token_t *add_token(token_t *head, char *token)
 {
 	token_t *temp = head;
-	token_t *new_token = token;
+	token_t *new_token;
 
-	new_token = malloc(sizeof(token));
+	new_token = malloc(sizeof(token_t));
 
 	if (new_token == NULL)
 		return (NULL);

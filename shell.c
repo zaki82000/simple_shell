@@ -13,15 +13,15 @@ int main(int ac, char **av)
 
 	if (ac >= 2)
 	{
-		FILE *file;
+		int fd;
 
-		file = fopen(av[1], "r");
+		fd = open(av[1], O_RDONLY);
 
-		if (file != NULL)
+		if (fd != -1)
 		{
 			info.file_name = av[1];
-			shell_non_interactive(&info, file);
-			fclose(file);
+			shell_non_interactive(&info, fd);
+			close(fd);
 		}
 		else
 		{
@@ -33,7 +33,7 @@ int main(int ac, char **av)
 		if (isatty(STDIN_FILENO) == 1)
 			shell_interactive(&info);
 		else
-			shell_non_interactive(&info, stdin);
+			shell_non_interactive(&info, STDIN_FILENO);
 	}
 
 	return (info.status);

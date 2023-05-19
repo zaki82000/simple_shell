@@ -4,7 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <string.h>
+#include <stdbool.h>
+
+
+#define BUFFSIZE 128
 
 /**
  * struct info - a struct that contians all current shell info.
@@ -20,8 +25,8 @@ typedef struct info
 } info_t;
 
 void shell_interactive(info_t *info);
-void shell_non_interactive(info_t *info, FILE *file);
-
+void shell_non_interactive(info_t *info, int fd);
+char *readline(int fd);
 
 /* tokens */
 

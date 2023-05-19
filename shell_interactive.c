@@ -8,12 +8,12 @@
  *
  * Return: the number of characters on success, -1 on error.
  */
-int prompt_and_getline(char *prompt, char **line, size_t *n)
+char *prompt_and_readline(char *prompt)
 {
 	if (prompt != NULL)
 		write(STDOUT_FILENO, prompt, strlen(prompt));
 
-	return (getline(line, n, stdin));
+	return (readline(STDIN_FILENO));
 }
 
 /**
@@ -23,10 +23,9 @@ int prompt_and_getline(char *prompt, char **line, size_t *n)
 void shell_interactive(info_t *info)
 {
 	char *prompt = "($) ";
-	char *line = NULL;
-	size_t n = 0;
+	char *line;
 
-	while (prompt_and_getline(prompt, &line, &n) != -1)
+	while ((line = prompt_and_readline(prompt)) != NULL)
 	{
 		(info->line_number)++;
 
@@ -37,12 +36,10 @@ void shell_interactive(info_t *info)
 
 		/* next line just for testing */
 		printf("%s: %d: %s", info->file_name, info->line_number, line);
+		fflush(stdout);
 
 		free(line);
-		line = NULL;
 	}
 
 	write(STDOUT_FILENO, "\n", 1);
-
-	free(line);
 }
