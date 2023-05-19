@@ -1,4 +1,4 @@
-#include "string.h"
+#include "shell.h"
 
 /**
  * _strlen - function to returns the length of a string @count is input.
@@ -48,18 +48,18 @@ int _strcmp(char *s1, char *s2)
 }
 
 /**
- * my_strncmp - Compare two strings up to a specified number of characters.
+ * _strncmp - Compare two strings up to a specified number of characters.
  * @str1: The first string to compare.
  * @str2: The second string to compare.
  * @n: The maximum number of characters to compare.
  *
  * Return: An integer less than, equal to, or greater than 0,
- * depending on the comparison result.
- *         - Negative value if str1 is less than str2.
- *         - Positive value if str1 is greater than str2.
- *         - Zero if both strings are equal up to n characters.
+ *	depending on the comparison result.
+ *	- Negative value if str1 is less than str2.
+ *	- Positive value if str1 is greater than str2.
+ *	- Zero if both strings are equal up to n characters.
  */
-int my_strncmp(const char *str1, const char *str2, size_t n)
+int _strncmp(const char *str1, const char *str2, size_t n)
 {
 	for (size_t i = 0; i < n; i++)
 	{
@@ -67,10 +67,11 @@ int my_strncmp(const char *str1, const char *str2, size_t n)
 		{
 			return (str1[i] - str2[i]);
 		}
-			if (str1[i] == '\0')
-			{
-				return (0);
-			}
+
+		if (str1[i] == '\0')
+		{
+			return (0);
+		}
 	}
 
 	return (0);
@@ -97,22 +98,21 @@ char *_strdup(char *str)
 
 
 
-		if (temp == NULL)
-		{
-		return (NULL);
-		}
-
-		temp_size = strlen(temp);
-
-		ptr = (char *) malloc(temp_size + 1);
-		ptr_temp = ptr;
-
-		if (ptr == NULL)
+	if (temp == NULL)
 		return (NULL);
 
-			while (*temp)
-			*ptr_temp++ = *temp++;
-			*ptr_temp = '\0';
+	temp_size = strlen(temp);
+
+	ptr = (char *) malloc(temp_size + 1);
+	ptr_temp = ptr;
+
+	if (ptr == NULL)
+		return (NULL);
+
+	while (*temp)
+		*ptr_temp++ = *temp++;
+
+	*ptr_temp = '\0';
 
 	return (ptr);
 
