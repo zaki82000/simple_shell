@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 /**
 * struct node - The given code snippet defines a structure called node
@@ -18,7 +17,7 @@ typedef struct node
 } token_t;
 
 token_t *add_token(token_t *head, char *token);
-token_t *create_tokens(char *line);
+token_t *create_tokens(char *line, char *d);
 size_t count_tokens(token_t *head);
 void free_tokens(token_t *head);
 
