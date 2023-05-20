@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <string.h>
 #include <stdbool.h>
 
@@ -13,13 +14,13 @@
 
 /**
  * struct info - a struct that contians all current shell info.
- * @file_name: the name of the program file.
+ * @file_path: the path of the file.
  * @line_number: the number of the current line.
  * @status: the status of the last command.
  */
 typedef struct info
 {
-	char *file_name;
+	char *file_path;
 	int line_number;
 	int status;
 } info_t;
@@ -27,6 +28,10 @@ typedef struct info
 void shell_interactive(info_t *info);
 void shell_non_interactive(info_t *info, int fd);
 char *readline(int fd);
+
+/* error */
+
+void print_error(info_t *info, char *lmsg, char *cmd, char *tmsg);
 
 /* tokens */
 
@@ -45,7 +50,6 @@ token_t *add_token(token_t *head, char *token);
 token_t *create_tokens(char *line, char *d);
 size_t count_tokens(token_t *head);
 void free_tokens(token_t *head);
-
 
 /* utils */
 

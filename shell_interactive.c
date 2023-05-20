@@ -1,10 +1,8 @@
 #include "shell.h"
 
 /**
- * prompt_and_getline - prompts the user to enter a line & reads it from stdin.
- * @prompt: a pointer to to prompt string.
- * @line: a pointer to a pointer that will points to line buffer.
- * @n: a pointer to a variable that will be set to the size of line buffer.
+ * prompt_and_readline - prompts & reads line from stdin.
+ * @prompt: a pointer to the prompt string.
  *
  * Return: the number of characters on success, -1 on error.
  */
@@ -35,7 +33,7 @@ void shell_interactive(info_t *info)
 		/* parse and execute code will be here */
 
 		/* next line just for testing */
-		printf("%s: %d: %s", info->file_name, info->line_number, line);
+		printf("%s: %d: %s", info->file_path, info->line_number, line);
 		fflush(stdout);
 
 		free(line);

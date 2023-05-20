@@ -1,5 +1,11 @@
 #include "shell.h"
 
+/**
+ * readline - reads one line from a file.
+ * @fd: the file descriptor.
+ *
+ * Return: a pointer to the line.
+ */
 char *readline(int fd)
 {
 	char *line, *ptr;
@@ -12,11 +18,9 @@ char *readline(int fd)
 
 	size = BUFFSIZE + 1;
 	ptr = line;
-
 	while (true)
 	{
 		readed = read(fd, ptr, BUFFSIZE);
-
 		if (readed <= 0)
 		{
 			if (total_readed != 0)
@@ -29,7 +33,6 @@ char *readline(int fd)
 			free(line);
 			return (NULL);
 		}
-
 		for (int i = 0; i < readed; i++)
 		{
 			if (ptr[i] == '\n')
@@ -40,12 +43,9 @@ char *readline(int fd)
 				return (line);
 			}
 		}
-
 		total_readed += readed;
-
 		line = _realloc(line, size, size + BUFFSIZE);
 		size += BUFFSIZE;
-
 		ptr = (line + total_readed);
 	}
 }

@@ -19,7 +19,7 @@ void shell_non_interactive(info_t *info, int fd)
 		/* parse and execute code will be here */
 
 		/* next line just for testing */
-		printf("%s: %d: %s", info->file_name, info->line_number, line);
+		printf("%s: %d: %s", info->file_path, info->line_number, line);
 		fflush(stdout);
 
 		free(line);

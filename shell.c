@@ -19,13 +19,16 @@ int main(int ac, char **av)
 
 		if (fd != -1)
 		{
-			info.file_name = av[1];
+			info.file_path = av[1];
 			shell_non_interactive(&info, fd);
 			close(fd);
 		}
 		else
 		{
-			/* needs error handling */
+			char *tmsg = errno == ENOENT ? "No such file\n" : NULL;
+
+			info.status = 2;
+			print_error(&info, "cannot open ", av[1], tmsg);
 		}
 	}
 	else
