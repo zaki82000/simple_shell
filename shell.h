@@ -25,9 +25,42 @@ typedef struct info
 	int status;
 } info_t;
 
+
 void shell_interactive(info_t *info);
 void shell_non_interactive(info_t *info, int fd);
 char *readline(int fd);
+
+/* parse */
+
+/**
+ * struct command - a struct that represent a command.
+ * @path: a pointer to the command path.
+ * @av: the argument vector of the command.
+ */
+typedef struct command
+{
+	char *path;
+	char **av;
+} command_t;
+
+command_t *parse_line(char *line);
+
+/* built_ins */
+
+/**
+ * struct built_in - a struct that represent a built-in.
+ * @name: a pointer to the name of the built-in.
+ * @fun: a pointer to the built-in function.
+ */
+typedef struct built_in
+{
+	char *name;
+	int (*fun)(info_t *info, char **av);
+} built_in_t;
+
+int (*find_build_in(char *name))(info_t *info, char **av);
+int exit_shell(info_t info, char **av);
+int env(info_t info, char **av);
 
 /* error */
 
