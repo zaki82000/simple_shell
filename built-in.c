@@ -1,5 +1,4 @@
 #include "shell.h"
-#include "string_utils.c"
 
 /**
  * find_build_in - Find a built-in command by name
@@ -7,12 +6,12 @@
  *
  * Return: A function pointer to the built-in command, or NULL if not found
  */
-int (*find_build_in(char *name))(info_t *info, char **av)
+void (*find_build_in(char *name))(info_t *info, char **av)
 {
 	int i = 0;
 	built_in_t built_in[] = { 
-		{"exit", exit_shell},
-		{"env", env},
+		{"exit", _exit_},
+		{"env", _env_},
 		{NULL, NULL}
 	};
 
@@ -32,24 +31,19 @@ int (*find_build_in(char *name))(info_t *info, char **av)
  * exit_shell - Built-in command: exit
  * @info: Pointer to the info_t structure
  * @av: Array of command arguments
- *
- * Return: None
  */
-int exit_shell(info_t *info, char **av)
+void _exit_(info_t *info, char **av)
 {
-	exit(0);
+	exit(info->status);
 }
 
 /**
  * env - Built-in command: env
  * @info: Pointer to the info_t structure
  * @av: Array of command arguments
- *
- * Return: None
  */
-int env(info_t *info, char **av) 
+void _env_(info_t *info, char **av) 
 {
-	extern char **environ;
 	char *newline = "\n";
 	int i;
 
@@ -58,4 +52,6 @@ int env(info_t *info, char **av)
 		write(1, environ[i], strlen(environ[i]));
 		write(1, newline, strlen(newline));
 	}
+
+	info->status = 0;
 }

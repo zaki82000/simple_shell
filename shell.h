@@ -59,12 +59,12 @@ char *create_path(char *dir, char *file);
 typedef struct built_in
 {
 	char *name;
-	int (*fun)(info_t *info, char **av);
+	void (*fun)(info_t *info, char **av);
 } built_in_t;
 
-int (*find_build_in(char *name))(info_t *info, char **av);
-int exit_shell(info_t info, char **av);
-int env(info_t info, char **av);
+void (*find_build_in(char *name))(info_t *info, char **av);
+void _exit_(info_t *info, char **av);
+void _env_(info_t *info, char **av);
 
 /* error */
 

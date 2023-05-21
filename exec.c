@@ -35,6 +35,8 @@ void exec(info_t *info, command_t *cmd)
 	}
 	else
 		wait(&status);
+
+	info->status = WEXITSTATUS(status);
 }
 
 /**
