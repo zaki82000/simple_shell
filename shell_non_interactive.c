@@ -3,25 +3,29 @@
 /**
  * shell_non_interactive - runs shell on non-interactive mode.
  * @info: a pointer to struct that contains all current shell info.
- * @fd: tha file descriptor.
+ * @file: a pointer to the file.
  */
-void shell_non_interactive(info_t *info, int fd)
+void shell_non_interactive(info_t *info, FILE *file)
 {
-	char *line = NULL;
+	char *line;
+	size_t n;
 
-	while ((line = readline(fd)) != NULL)
+	while (getline(&line, &n, file) != -1)
 	{
 		(info->line_number)++;
 
-		if (line[0] == '\n')
+		if (is_empty(line))
+		{
+			free(line);
+			line = NULL;
 			continue;
+		}
 
-		/* parse and execute code will be here */
-
-		/* next line just for testing */
-		printf("%s: %d: %s", info->file_path, info->line_number, line);
-		fflush(stdout);
+		interpret(info, line);
 
 		free(line);
+		line = NULL;
 	}
+
+	free(line);
 }

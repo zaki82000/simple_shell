@@ -27,14 +27,13 @@ void shell_interactive(info_t *info)
 	{
 		(info->line_number)++;
 
-		if (line[0] == '\n')
+		if (is_empty(line))
+		{
+			free(line);
 			continue;
+		}
 
-		/* parse and execute code will be here */
-
-		/* next line just for testing */
-		printf("%s: %d: %s", info->file_path, info->line_number, line);
-		fflush(stdout);
+		interpret(info, line);
 
 		free(line);
 	}

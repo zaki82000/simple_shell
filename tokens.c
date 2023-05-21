@@ -5,7 +5,7 @@
  * @head: The head of the linked list.
  * @token: The token to be added.
  *
- * Return: A pointer to new token node.
+ * Return: A pointer to head of the linked list.
  */
 token_t *add_token(token_t *head, char *token)
 {
@@ -17,7 +17,7 @@ token_t *add_token(token_t *head, char *token)
 	if (new_token == NULL)
 		return (NULL);
 
-	new_token->data = _strdup(token);
+	new_token->data = token;
 	new_token->next = NULL;
 
 	if (head == NULL)
@@ -34,7 +34,7 @@ token_t *add_token(token_t *head, char *token)
 		temp->next = new_token;
 	}
 
-	return (new_token);
+	return (head);
 }
 
 /**
@@ -65,15 +65,14 @@ size_t count_tokens(token_t *head)
  * free_tokens - Frees a linked list of tokens.
  * @head: The head of the linked list.
  */
-void free_tokens(token_t *head)
+void free_tokens(token_t **head)
 {
 	token_t *temp;
 
-	while (head != NULL)
+	while (*head != NULL)
 	{
-		temp = head;
-		head = head->next;
-		free(temp->data);
+		temp = *head;
+		*head = (*head)->next;
 		free(temp);
 	}
 }

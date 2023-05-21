@@ -5,12 +5,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <errno.h>
 #include <string.h>
 #include <stdbool.h>
 
-
 #define BUFFSIZE 128
+
+extern char **environ;
 
 /**
  * struct info - a struct that contians all current shell info.
@@ -25,13 +28,6 @@ typedef struct info
 	int status;
 } info_t;
 
-
-void shell_interactive(info_t *info);
-void shell_non_interactive(info_t *info, int fd);
-char *readline(int fd);
-
-/* parse */
-
 /**
  * struct command - a struct that represent a command.
  * @path: a pointer to the command path.
@@ -43,7 +39,15 @@ typedef struct command
 	char **av;
 } command_t;
 
+void shell_interactive(info_t *info);
+void shell_non_interactive(info_t *info, FILE *file);
+
+char *readline(int fd);
+void interpret(info_t *info, char *line);
 command_t *parse_line(char *line);
+void exec(info_t *info, command_t *cmd);
+char *find_path(char *file);
+char *create_path(char *dir, char *file);
 
 /* built_ins */
 
@@ -64,7 +68,7 @@ int env(info_t info, char **av);
 
 /* error */
 
-void print_error(info_t *info, char *lmsg, char *cmd, char *tmsg);
+void print_error(info_t *info, char *cmd, char *msg);
 
 /* tokens */
 
@@ -82,7 +86,8 @@ typedef struct token
 token_t *add_token(token_t *head, char *token);
 token_t *create_tokens(char *line, char *d);
 size_t count_tokens(token_t *head);
-void free_tokens(token_t *head);
+void free_tokens(token_t **head);
+char **tokens_to_av(token_t *head);
 
 /* utils */
 
@@ -94,5 +99,6 @@ int _strlen(char *s);
 int _strcmp(char *s1, char *s2);
 int _strncmp(const char *str1, const char *str2, size_t n);
 char *_strdup(char *str);
+int is_empty(char *s);
 
 #endif

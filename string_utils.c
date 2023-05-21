@@ -97,3 +97,22 @@ char *_strdup(char *str)
 
 	return (ptr);
 }
+
+/**
+* is_empty - checks if a string is empty.
+* @s: a pointer to the string.
+*
+* Return: 1 if the string is empty, 0 if its not empty.
+*/
+int is_empty(char *s)
+{
+	for (int i = 0; s[i]; i++)
+	{
+		if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+		{
+			return (0);
+		}
+	}
+
+	return (1);
+}

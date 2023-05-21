@@ -3,20 +3,18 @@
 /**
  * print_error - prints a formated error message.
  * @info: a pointer to the struct that contians all shell info.
- * @lmsg: a pointer to the leading message.
  * @cmd: a pointer to command string.
- * @tmsg: a pointer to trailing message.
+ * @msg: a pointer to error message.
  */
-void print_error(info_t *info, char *lmsg, char *cmd, char *tmsg)
+void print_error(info_t *info, char *cmd, char *msg)
 {
 	dprintf(STDERR_FILENO,
-		"%s: %d: %s%s: %s",
+		"%s: %d: %s: %s",
 		info->file_path,
 		info->line_number,
-		(lmsg != NULL ? lmsg : ""),
 		cmd,
-		(tmsg != NULL ? tmsg : ""));
+		msg != NULL ? msg : "");
 
-	if (tmsg == NULL)
+	if (msg == NULL)
 		perror("");
 }

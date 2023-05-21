@@ -13,22 +13,20 @@ int main(int ac, char **av)
 
 	if (ac >= 2)
 	{
-		int fd;
+		FILE *file;
 
-		fd = open(av[1], O_RDONLY);
+		file = fopen(av[1], "r");
 
-		if (fd != -1)
+		if (file != NULL)
 		{
 			info.file_path = av[1];
-			shell_non_interactive(&info, fd);
-			close(fd);
+			shell_non_interactive(&info, file);
+			fclose(file);
 		}
 		else
 		{
-			char *tmsg = errno == ENOENT ? "No such file\n" : NULL;
-
 			info.status = 2;
-			print_error(&info, "cannot open ", av[1], tmsg);
+			print_error(&info, av[1], NULL);
 		}
 	}
 	else
@@ -36,7 +34,7 @@ int main(int ac, char **av)
 		if (isatty(STDIN_FILENO) == 1)
 			shell_interactive(&info);
 		else
-			shell_non_interactive(&info, STDIN_FILENO);
+			shell_non_interactive(&info, stdin);
 	}
 
 	return (info.status);
