@@ -1,12 +1,12 @@
 #include "shell.h"
 
 /**
- * parse_line - parses the line to be a valid command.
+ * parse - parses the line to be a valid command.
  * @line: a pointer to the line.
  *
  * Return: a pointer to the command.
  */
-command_t *parse_line(char *line)
+command_t *parse(char *line)
 {
 	command_t *cmd;
 	token_t *tokens;
@@ -20,7 +20,7 @@ command_t *parse_line(char *line)
 
 	/* variables and alias replacement will be here */
 
-	cmd->path = tokens->data;
+	cmd->path = tokens->t;
 	cmd->av = tokens_to_av(tokens);
 
 	free_tokens(&tokens);

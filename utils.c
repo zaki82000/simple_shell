@@ -1,45 +1,24 @@
 #include "shell.h"
 
 /**
- * _realloc - function that reallocates a memory block.
- * @ptr: a pointer to the memory block that previously allocated.
- * @old_size: the  old size of the old memory block.
- * @new_size: the new size of the new memory block.
- *
- * Return: a pointer to the new memory block.
- */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+* envdup - duplicates an enviornment variable.
+* @name: the name of the enviornment variable.
+*
+* Return: a pointer to duplicated variable.
+*/
+char *envdup(char *name)
 {
-	void *new_ptr;
-	unsigned int i, min;
+	char *env, *dup;
 
-	if (new_size == 0 && ptr != NULL)
-	{
-		free(ptr);
+	env = getenv(name);
+
+	if (env == NULL)
 		return (NULL);
-	}
 
-	if (old_size == new_size && ptr != NULL)
-		return (ptr);
+	dup = _strdup(env);
 
-	min = old_size < new_size ? old_size : new_size;
+	if (dup == NULL)
+		return (NULL);
 
-	new_ptr = malloc(new_size);
-
-	if (new_ptr == NULL)
-		return (ptr);
-
-	if (ptr == NULL)
-	{
-		ptr = new_ptr;
-		return (ptr);
-	}
-
-	for (i = 0; i < min; i++)
-		((char *) new_ptr)[i] = ((char *) ptr)[i];
-
-	free(ptr);
-	ptr = new_ptr;
-
-	return (ptr);
+	return (dup);
 }

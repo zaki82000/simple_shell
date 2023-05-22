@@ -7,26 +7,35 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include <errno.h>
 #include <string.h>
-#include <stdbool.h>
-
-#define BUFFSIZE 128
-
-extern char **environ;
 
 /**
- * struct info - a struct that contians all current shell info.
+ * struct info - a struct that contians all global shell info.
  * @file_path: the path of the file.
  * @line_number: the number of the current line.
+ * @child_pid: the child process id.
  * @status: the status of the last command.
  */
 typedef struct info
 {
 	char *file_path;
 	int line_number;
+	pid_t child_pid;
 	int status;
 } info_t;
+
+/* __________ shell_non_interactive.c __________ */
+
+void shell_non_interactive(FILE *file);
+
+/* __________ shell_interactive.c __________ */
+
+void shell_interactive(void);
+ssize_t prompt_and_getline(char *prompt, char **line, size_t *n);
+
+/* __________ interpret.c __________ */
 
 /**
  * struct command - a struct that represent a command.
@@ -39,17 +48,13 @@ typedef struct command
 	char **av;
 } command_t;
 
-void shell_interactive(info_t *info);
-void shell_non_interactive(info_t *info, FILE *file);
+void interpret(char *line);
 
-char *readline(int fd);
-void interpret(info_t *info, char *line);
-command_t *parse_line(char *line);
-void exec(info_t *info, command_t *cmd);
-char *find_path(char *file);
-char *create_path(char *dir, char *file);
+/* __________ parse.c __________ */
 
-/* built_ins */
+command_t *parse(char *line);
+
+/* __________ built_ins.c __________ */
 
 /**
  * struct built_in - a struct that represent a built-in.
@@ -59,46 +64,61 @@ char *create_path(char *dir, char *file);
 typedef struct built_in
 {
 	char *name;
-	void (*fun)(info_t *info, char **av);
+	void (*fun)(char **av);
 } built_in_t;
 
-void (*find_build_in(char *name))(info_t *info, char **av);
-void _exit_(info_t *info, char **av);
-void _env_(info_t *info, char **av);
+void (*find_build_in(char *name))(char **av);
+void _exit_(char **av);
+void _env_(char **av);
 
-/* error */
+/* __________ exec.c _________ */
 
-void print_error(info_t *info, char *cmd, char *msg);
+void exec(command_t *cmd);
+char *find_path(char *file);
+char *create_path(char *dir, char *file);
 
-/* tokens */
+/* __________ handle_sigint.c __________ */
+
+void handle_sigint(int);
+
+/* __________ error.c __________ */
+
+void print_error(char *cmd, char *msg);
+
+/* _________ tokens.c __________ */
 
 /**
-* struct token - The given code snippet defines a structure called token
-* @data: This member is a pointer to a character
-* @next: This member is a pointer to another token_t structure
+* struct token - a struct that repesent a token node.
+* @t: a pinter to the token.
+* @next: a pointer to the next node.
 */
 typedef struct token
 {
-	char *data;
+	char *t;
 	struct token *next;
 } token_t;
 
 token_t *add_token(token_t *head, char *token);
-token_t *create_tokens(char *line, char *d);
+token_t *create_tokens(char *str, char *d);
 size_t count_tokens(token_t *head);
 void free_tokens(token_t **head);
 char **tokens_to_av(token_t *head);
 
-/* utils */
+/* __________ utils.c __________ */
 
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+char *envdup(char *name);
 
-/* string utils */
+/* __________ string_utils.c __________ */
 
-int _strlen(char *s);
-int _strcmp(char *s1, char *s2);
+int _strlen(char *str);
+int _strcmp(char *str1, char *str2);
 int _strncmp(const char *str1, const char *str2, size_t n);
 char *_strdup(char *str);
-int is_empty(char *s);
+int is_empty(char *str);
+
+/* __________ global varibales __________ */
+
+extern char **environ;
+extern info_t info;
 
 #endif

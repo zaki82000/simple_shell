@@ -2,18 +2,18 @@
 
 /**
  * _strlen - returns the length of a string.
- * @s: a poiner to the string.
+ * @str: a poiner to the string.
  *
  * Return: length of the string.
  */
-int _strlen(char *s)
+int _strlen(char *str)
 {
 	int count = 0;
 
-	while (*s != '\0')
+	while (*str != '\0')
 	{
 		count++;
-		s++;
+		str++;
 	}
 
 	return (count);
@@ -21,25 +21,25 @@ int _strlen(char *s)
 
 /**
  * _strcmp - compares two strings.
- * @s1: a pointer to first string.
- * @s2: a pointer to second string.
+ * @str1: a pointer to first string.
+ * @str2: a pointer to second string.
  *
  * Return: 0 if both stringes ate same. ASCII code defference otherwise.
  */
-int _strcmp(char *s1, char *s2)
+int _strcmp(char *str1, char *str2)
 {
-	while (*s1 != '\0' && *s2 != '\0')
+	while (*str1 != '\0' && *str2 != '\0')
 	{
-		if (*s1 == *s2)
+		if (*str1 == *str2)
 		{
-			s1++;
-			s2++;
+			str1++;
+			str2++;
 		}
 		else
-			return (*s1 - *s2);
+			return (*str1 - *str2);
 	}
 
-	return (*s1 - *s2);
+	return (*str1 - *str2);
 }
 
 /**
@@ -54,7 +54,9 @@ int _strcmp(char *s1, char *s2)
  */
 int _strncmp(const char *str1, const char *str2, size_t n)
 {
-	for (size_t i = 0; i < n; i++)
+	size_t i;
+
+	for (i = 0; i < n; i++)
 	{
 		if (str1[i] != str2[i])
 			return (str1[i] - str2[i]);
@@ -100,15 +102,17 @@ char *_strdup(char *str)
 
 /**
 * is_empty - checks if a string is empty.
-* @s: a pointer to the string.
+* @str: a pointer to the string.
 *
 * Return: 1 if the string is empty, 0 if its not empty.
 */
-int is_empty(char *s)
+int is_empty(char *str)
 {
-	for (int i = 0; s[i]; i++)
+	int i;
+
+	for (i = 0; str[i]; i++)
 	{
-		if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n')
+		if (str[i] != ' ' && str[i] != '\t' && str[i] != '\n')
 		{
 			return (0);
 		}

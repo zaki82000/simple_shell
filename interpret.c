@@ -2,25 +2,24 @@
 
 /**
  * interpret - interprets the line.
- * @info: a pointer to the struct that contains all shell info.
  * @line: a pointer to the line.
  */
-void interpret(info_t *info, char *line)
+void interpret(char *line)
 {
 	command_t *cmd;
-	void (*built_in)(info_t *info, char **av);
+	void (*built_in)(char **av);
 
-	cmd = parse_line(line);
+	cmd = parse(line);
 
 	built_in = find_build_in(cmd->path);
 
 	if (built_in != NULL)
 	{
-		built_in(info, cmd->av);
+		built_in(cmd->av);
 	}
 	else
 	{
-		exec(info, cmd);
+		exec(cmd);
 		free(cmd->path);
 	}
 

@@ -2,10 +2,9 @@
 
 /**
  * exec - executes the command.
- * @info: a pointer to the struct that contains all shell info.
  * @cmd: a pointer to the command.
  */
-void exec(info_t *info, command_t *cmd)
+void exec(command_t *cmd)
 {
 	pid_t pid;
 	int status;
@@ -14,20 +13,20 @@ void exec(info_t *info, command_t *cmd)
 
 	if (cmd->path == NULL)
 	{
-		info->status = 127;
-		print_error(info, (cmd->av)[0], "not found\n");
-
+		info.status = 127;
+		print_error((cmd->av)[0], "not found\n");
 		return;
 	}
-	else if (access(cmd->path, X_OK) == -1)
-	{
-		info->status = 126;
-		print_error(info, (cmd->av)[0], NULL);
 
+	if (access(cmd->path, X_OK) == -1)
+	{
+		info.status = 126;
+		print_error((cmd->av)[0], "Permission denied\n");
 		return;
 	}
 
 	pid = fork();
+	info.child_pid = pid;
 
 	if (pid == 0)
 	{
@@ -36,7 +35,16 @@ void exec(info_t *info, command_t *cmd)
 	else
 		wait(&status);
 
-	info->status = WEXITSTATUS(status);
+	if (WIFSIGNALED(status))
+	{
+		info.status = 130;
+	}
+	else
+	{
+		info.status = WEXITSTATUS(status);
+	}
+
+	info.child_pid = 0;
 }
 
 /**
@@ -47,23 +55,18 @@ void exec(info_t *info, command_t *cmd)
  */
 char *find_path(char *file)
 {
-	char *PATH, *PATH_dup, *path;
+	char *PATH, *path;
 	token_t *dirs, *currdir;
 
 	if (access(file, F_OK) == 0)
 		return (_strdup(file));
 
-	PATH = getenv("PATH");
+	PATH = envdup("PATH");
 
 	if (PATH == NULL)
 		return (NULL);
 
-	PATH_dup = _strdup(PATH);
-
-	if (PATH_dup == NULL)
-		return (NULL);
-
-	dirs = create_tokens(PATH_dup, ":");
+	dirs = create_tokens(PATH, ":");
 
 	if (dirs == NULL)
 		return (NULL);
@@ -72,19 +75,23 @@ char *find_path(char *file)
 
 	while (currdir != NULL)
 	{
-		path = create_path(currdir->data, file);
+		path = create_path(currdir->t, file);
 
 		if (access(path, F_OK) == 0)
 		{
-			free(PATH_dup);
+			free(PATH);
 			free_tokens(&dirs);
+
 			return (path);
 		}
+
 		free(path);
 		currdir = currdir->next;
 	}
-	free(PATH_dup);
+
+	free(PATH);
 	free_tokens(&dirs);
+
 	return (NULL);
 }
 

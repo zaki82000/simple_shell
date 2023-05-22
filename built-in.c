@@ -1,48 +1,47 @@
 #include "shell.h"
 
 /**
- * find_build_in - Find a built-in command by name
- * @name: The name of the command
+ * find_build_in - Find a built-in command by name.
+ * @name: The name of the command.
  *
- * Return: A function pointer to the built-in command, or NULL if not found
+ * Return: A function pointer to the built-in command, or NULL if not found.
  */
-void (*find_build_in(char *name))(info_t *info, char **av)
+void (*find_build_in(char *name))(char **av)
 {
 	int i = 0;
-	built_in_t built_in[] = { 
+	built_in_t built_ins[] = {
 		{"exit", _exit_},
 		{"env", _env_},
 		{NULL, NULL}
 	};
 
-	while (built_in[i].name != NULL)
+	while (built_ins[i].name != NULL)
 	{
-		if (_strcmp(built_in[i].name, name) == 0)
+		if (_strcmp(built_ins[i].name, name) == 0)
 		{
-			return built_in[i].fun;
+			return (built_ins[i].fun);
 		}
+
 		i++;
 	}
 
-	return NULL;
+	return (NULL);
 }
 
 /**
- * exit_shell - Built-in command: exit
- * @info: Pointer to the info_t structure
- * @av: Array of command arguments
+ * _exit_ - Exits the shell with status.
+ * @av: Array of command arguments.
  */
-void _exit_(info_t *info, char **av)
+void _exit_(__attribute__((unused))char **av)
 {
-	exit(info->status);
+	exit(info.status);
 }
 
 /**
- * env - Built-in command: env
- * @info: Pointer to the info_t structure
+ * _env_ - Prints all environment variables.
  * @av: Array of command arguments
  */
-void _env_(info_t *info, char **av) 
+void _env_(__attribute__((unused)) char **av)
 {
 	char *newline = "\n";
 	int i;
@@ -53,5 +52,5 @@ void _env_(info_t *info, char **av)
 		write(1, newline, strlen(newline));
 	}
 
-	info->status = 0;
+	info.status = 0;
 }

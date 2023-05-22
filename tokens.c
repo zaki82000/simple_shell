@@ -17,7 +17,7 @@ token_t *add_token(token_t *head, char *token)
 	if (new_token == NULL)
 		return (NULL);
 
-	new_token->data = token;
+	new_token->t = token;
 	new_token->next = NULL;
 
 	if (head == NULL)
@@ -78,18 +78,18 @@ void free_tokens(token_t **head)
 }
 
 /**
- * create_tokens - Creates a linked list of tokens from a line.
- * @line: The input line.
+ * create_tokens - Creates a linked list of tokens from a string.
+ * @str: a pointer to the string.
  * @d: The delimiter used to separate tokens.
  *
  * Return: A pointer to the head of the linked list of tokens.
  */
-token_t *create_tokens(char *line, char *d)
+token_t *create_tokens(char *str, char *d)
 {
 	token_t *head = NULL;
 	char *token;
 
-	token = strtok(line, d);
+	token = strtok(str, d);
 
 	while (token != NULL)
 	{
@@ -110,7 +110,7 @@ char **tokens_to_av(token_t *head)
 {
 	char **av;
 	size_t count;
-	int i;
+	size_t i;
 
 	if (head == NULL)
 		return (NULL);
@@ -122,7 +122,7 @@ char **tokens_to_av(token_t *head)
 		return (NULL);
 
 	for (i = 0; i < count; i++, head = head->next)
-		av[i] = head->data;
+		av[i] = head->t;
 
 	av[i] = NULL;
 

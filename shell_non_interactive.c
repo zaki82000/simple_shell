@@ -2,17 +2,16 @@
 
 /**
  * shell_non_interactive - runs shell on non-interactive mode.
- * @info: a pointer to struct that contains all current shell info.
  * @file: a pointer to the file.
  */
-void shell_non_interactive(info_t *info, FILE *file)
+void shell_non_interactive(FILE *file)
 {
 	char *line;
 	size_t n;
 
 	while (getline(&line, &n, file) != -1)
 	{
-		(info->line_number)++;
+		(info.line_number)++;
 
 		if (is_empty(line))
 		{
@@ -21,7 +20,7 @@ void shell_non_interactive(info_t *info, FILE *file)
 			continue;
 		}
 
-		interpret(info, line);
+		interpret(line);
 
 		free(line);
 		line = NULL;
