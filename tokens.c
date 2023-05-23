@@ -1,130 +1,33 @@
 #include "shell.h"
 
 /**
- * add_token - Adds a new token to the linked list.
- * @head: The head of the linked list.
- * @token: The token to be added.
- *
- * Return: A pointer to head of the linked list.
- */
-token_t *add_token(token_t *head, char *token)
+* create_tokens - creates an array of tokens from line;
+* @line: a pointer to the line.
+* @d: a set of bytes that delimit the tokens in the parsed string.
+*
+* Return: a pointer to the array of tokens.
+*/
+char **create_tokens(char *line, char *d)
 {
-	token_t *temp = head;
-	token_t *new_token;
+	char *token, **tokens;
+	int i;
 
-	new_token = malloc(sizeof(token_t));
+	tokens = malloc(sizeof(char **));
 
-	if (new_token == NULL)
-		return (NULL);
+	token = strtok(line, d);
 
-	new_token->t = token;
-	new_token->next = NULL;
-
-	if (head == NULL)
+	for (i = 1; token != NULL; i++)
 	{
-		head = new_token;
-	}
-	else
-	{
-		while (temp->next != NULL)
-		{
-			temp = temp->next;
-		}
+		tokens[i - 1] = token;
+		tokens = _realloc(
+				tokens,
+				i * (sizeof(char *)),
+				(i + 1) * sizeof(char *));
 
-		temp->next = new_token;
-	}
-
-	return (head);
-}
-
-/**
- * count_tokens - Counts the number of tokens in a linked list.
- * @head: The head of the linked list.
- *
- * Return: The number of tokens in the linked list.
- */
-size_t count_tokens(token_t *head)
-{
-	token_t *temp = head;
-	size_t count = 1;
-
-	if (temp == NULL)
-		return (-1);
-
-
-	while (temp->next != NULL)
-	{
-		temp = temp->next;
-		count++;
-	}
-
-	return (count);
-}
-
-/**
- * free_tokens - Frees a linked list of tokens.
- * @head: The head of the linked list.
- */
-void free_tokens(token_t **head)
-{
-	token_t *temp;
-
-	while (*head != NULL)
-	{
-		temp = *head;
-		*head = (*head)->next;
-		free(temp);
-	}
-}
-
-/**
- * create_tokens - Creates a linked list of tokens from a string.
- * @str: a pointer to the string.
- * @d: The delimiter used to separate tokens.
- *
- * Return: A pointer to the head of the linked list of tokens.
- */
-token_t *create_tokens(char *str, char *d)
-{
-	token_t *head = NULL;
-	char *token;
-
-	token = strtok(str, d);
-
-	while (token != NULL)
-	{
-		head = add_token(head, token);
 		token = strtok(NULL, d);
 	}
 
-	return (head);
-}
+	tokens[i - 1] = NULL;
 
-/**
- * tokens_to_av - converts a tokens linked list to an array of strings.
- * @head: a pointer to the head of the linked list.
- *
- * Return: a pointer to the array of strings.
- */
-char **tokens_to_av(token_t *head)
-{
-	char **av;
-	size_t count;
-	size_t i;
-
-	if (head == NULL)
-		return (NULL);
-
-	count = count_tokens(head);
-	av = malloc((count + 1) * sizeof(char *));
-
-	if (av == NULL)
-		return (NULL);
-
-	for (i = 0; i < count; i++, head = head->next)
-		av[i] = head->t;
-
-	av[i] = NULL;
-
-	return (av);
+	return (tokens);
 }

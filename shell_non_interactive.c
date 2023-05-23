@@ -6,14 +6,14 @@
  */
 void shell_non_interactive(FILE *file)
 {
-	char *line;
-	size_t n;
+	char *line = NULL;
+	size_t n = 0;
 
 	while (getline(&line, &n, file) != -1)
 	{
-		(info.line_number)++;
+		(info.count)++;
 
-		if (is_empty(line))
+		if (is_empty(line) || line[0] == '#')
 		{
 			free(line);
 			line = NULL;

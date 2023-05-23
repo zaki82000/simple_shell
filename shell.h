@@ -11,21 +11,6 @@
 #include <errno.h>
 #include <string.h>
 
-/**
- * struct info - a struct that contians all global shell info.
- * @file_path: the path of the file.
- * @line_number: the number of the current line.
- * @child_pid: the child process id.
- * @status: the status of the last command.
- */
-typedef struct info
-{
-	char *file_path;
-	int line_number;
-	pid_t child_pid;
-	int status;
-} info_t;
-
 /* __________ shell_non_interactive.c __________ */
 
 void shell_non_interactive(FILE *file);
@@ -50,11 +35,38 @@ typedef struct command
 
 void interpret(char *line);
 
+/* _________ variables.c __________ */
+
+/**
+* struct variable - a struct represents a variable node.
+* @name: a pointer to the name of the variable.
+* @value: a pointer the value of the variable.
+* @next: a pointer to the next node.
+*/
+typedef struct variable
+{
+	char *name;
+	char *value;
+	struct variable *next;
+} variable_t;
+
+variable_t *new_variable(char *name, char *value);
+variable_t *set_variable(variable_t **head, char *name, char *value);
+void unset_variable(variable_t **head, char *name);
+void free_variables(variable_t **head);
+char *get_variable(variable_t *head, char *name);
+
+/* _________ tokens.c __________ */
+
+char **create_tokens(char *line, char *d);
+
 /* __________ parse.c __________ */
 
 command_t *parse(char *line);
+void handle_comments(char *line);
+void handle_variables(char **tokens);
 
-/* __________ built_ins.c __________ */
+/* __________ built_in.c __________ */
 
 /**
  * struct built_in - a struct that represent a built-in.
@@ -83,32 +95,16 @@ void handle_sigint(int);
 
 /* __________ error.c __________ */
 
-void print_error(char *cmd, char *msg);
-
-/* _________ tokens.c __________ */
-
-/**
-* struct token - a struct that repesent a token node.
-* @t: a pinter to the token.
-* @next: a pointer to the next node.
-*/
-typedef struct token
-{
-	char *t;
-	struct token *next;
-} token_t;
-
-token_t *add_token(token_t *head, char *token);
-token_t *create_tokens(char *str, char *d);
-size_t count_tokens(token_t *head);
-void free_tokens(token_t **head);
-char **tokens_to_av(token_t *head);
+void print_error(char *lmsg, char *cmd, char *tmsg);
 
 /* __________ utils.c __________ */
 
+void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *envdup(char *name);
+void set_nvariable(variable_t **head, char *name, int n);
+void set_status(int status);
 
-/* __________ string_utils.c __________ */
+/* __________ strings_utils.c __________ */
 
 int _strlen(char *str);
 int _strcmp(char *str1, char *str2);
@@ -116,7 +112,28 @@ int _strncmp(const char *str1, const char *str2, size_t n);
 char *_strdup(char *str);
 int is_empty(char *str);
 
+/* __________ numbers_utils.c __________ */
+
+char *int_to_str(int num);
+
 /* __________ global varibales __________ */
+
+/**
+ * struct info - a struct that contians all global shell info.
+ * @path: the path of the file.
+ * @count: the lines count.
+ * @variables: the variables linked list.
+ * @child_pid: the child process id.
+ * @status: the status of the last command.
+ */
+typedef struct info
+{
+	char *path;
+	int count;
+	variable_t *variables;
+	pid_t child_pid;
+	int status;
+} info_t;
 
 extern char **environ;
 extern info_t info;

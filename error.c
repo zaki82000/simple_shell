@@ -2,18 +2,20 @@
 
 /**
  * print_error - prints a formated error message.
+ * @lmsg: a pointer to leading  message.
  * @cmd: a pointer to command string.
- * @msg: a pointer to error message.
+ * @tmsg: a pointer to trealing  message.
  */
-void print_error(char *cmd, char *msg)
+void print_error(char *lmsg, char *cmd, char *tmsg)
 {
 	dprintf(STDERR_FILENO,
-		"%s: %d: %s: %s",
-		info.file_path,
-		info.line_number,
+		"%s: %d: %s%s: %s",
+		info.path,
+		info.count,
+		lmsg != NULL ? lmsg : "",
 		cmd,
-		msg != NULL ? msg : "");
+		tmsg != NULL ? tmsg : "");
 
-	if (msg == NULL)
+	if (tmsg == NULL)
 		perror("");
 }

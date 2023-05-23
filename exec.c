@@ -13,15 +13,15 @@ void exec(command_t *cmd)
 
 	if (cmd->path == NULL)
 	{
-		info.status = 127;
-		print_error((cmd->av)[0], "not found\n");
+		set_status(127);
+		print_error(NULL, (cmd->av)[0], "not found\n");
 		return;
 	}
 
 	if (access(cmd->path, X_OK) == -1)
 	{
-		info.status = 126;
-		print_error((cmd->av)[0], "Permission denied\n");
+		set_status(126);
+		print_error(NULL, (cmd->av)[0], "Permission denied\n");
 		return;
 	}
 
@@ -37,11 +37,11 @@ void exec(command_t *cmd)
 
 	if (WIFSIGNALED(status))
 	{
-		info.status = 130;
+		set_status(130);
 	}
 	else
 	{
-		info.status = WEXITSTATUS(status);
+		set_status(WEXITSTATUS(status));
 	}
 
 	info.child_pid = 0;
@@ -55,8 +55,8 @@ void exec(command_t *cmd)
  */
 char *find_path(char *file)
 {
-	char *PATH, *path;
-	token_t *dirs, *currdir;
+	char *PATH, *path, **dirs;
+	int i;
 
 	if (access(file, F_OK) == 0)
 		return (_strdup(file));
@@ -71,26 +71,23 @@ char *find_path(char *file)
 	if (dirs == NULL)
 		return (NULL);
 
-	currdir = dirs;
-
-	while (currdir != NULL)
+	for (i = 0; dirs[i]; i++)
 	{
-		path = create_path(currdir->t, file);
+		path = create_path(dirs[i], file);
 
 		if (access(path, F_OK) == 0)
 		{
 			free(PATH);
-			free_tokens(&dirs);
+			free(dirs);
 
 			return (path);
 		}
 
 		free(path);
-		currdir = currdir->next;
 	}
 
 	free(PATH);
-	free_tokens(&dirs);
+	free(dirs);
 
 	return (NULL);
 }

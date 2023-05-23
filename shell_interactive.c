@@ -7,13 +7,13 @@ void shell_interactive(void)
 {
 	char *prompt = "($) ";
 	char *line = NULL;
-	size_t n;
+	size_t n = 0;
 
 	while (prompt_and_getline(prompt, &line, &n) != -1)
 	{
-		(info.line_number)++;
+		(info.count)++;
 
-		if (is_empty(line))
+		if (is_empty(line) || line[0] == '#')
 		{
 			free(line);
 			line = NULL;
