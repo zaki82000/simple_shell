@@ -32,9 +32,46 @@ void (*find_build_in(char *name))(char **av)
  * _exit_ - Exits the shell with status.
  * @av: Array of command arguments.
  */
-void _exit_(__attribute__((unused))char **av)
+void _exit_(char **av)
 {
-	exit(info.status);
+	int s;
+
+	if (av[1] != NULL)
+	{
+		if (!is_digits_only(av[1]))
+		{
+			print_error(NULL, av[0], "Illegal number:");
+			dprintf(STDERR_FILENO, " %s\n", av[1]);
+			set_status(2);
+			return;
+		}
+
+		s = atoi(av[1]);
+
+		if (s >= 0)
+		{
+			free(info.line);
+			free((info.cmd)->av);
+			free(info.cmd);
+			free_variables(&(info.variables));
+			exit(s);
+		}
+		else
+		{
+			info.status = s;
+			print_error(NULL, av[0], "Illegal number:");
+			dprintf(STDERR_FILENO, " %d\n", s);
+			set_status(2);
+		}
+	}
+	else
+	{
+		free(info.line);
+		free((info.cmd)->av);
+		free(info.cmd);
+		free_variables(&(info.variables));
+		exit(info.status);
+	}
 }
 
 /**

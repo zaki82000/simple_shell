@@ -9,6 +9,8 @@ void init(void)
 {
 	info.path = NULL;
 	info.count = 0;
+	info.line = NULL;
+	info.cmd = NULL;
 	info.child_pid = 0;
 
 	set_variable(&(info.variables), "NON", "");

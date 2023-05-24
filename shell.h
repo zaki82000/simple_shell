@@ -103,6 +103,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char *envdup(char *name);
 void set_nvariable(variable_t **head, char *name, int n);
 void set_status(int status);
+int is_digits_only(char *str);
 
 /* __________ strings_utils.c __________ */
 
@@ -123,6 +124,8 @@ char *int_to_str(int num);
  * @path: the path of the file.
  * @count: the lines count.
  * @variables: the variables linked list.
+ * @line: a pointer to the line.
+ * @cmd: a pointer to the command.
  * @child_pid: the child process id.
  * @status: the status of the last command.
  */
@@ -131,6 +134,8 @@ typedef struct info
 	char *path;
 	int count;
 	variable_t *variables;
+	char *line;
+	command_t *cmd;
 	pid_t child_pid;
 	int status;
 } info_t;

@@ -89,3 +89,24 @@ void set_status(int status)
 	info.status = status;
 	set_nvariable(&(info.variables), "?", status);
 }
+
+/**
+* is_digits_only - checks if a string contains digits only.
+* @str: a pointer to the string.
+*
+* Return: 1 if digits only, 0 otherwise,
+*/
+int is_digits_only(char *str)
+{
+	int i;
+
+	for (i = 0; str[i]; i++)
+	{
+		if (str[i] < '0' || str[i] > '9')
+		{
+			return (0);
+		}
+	}
+
+	return (1);
+}

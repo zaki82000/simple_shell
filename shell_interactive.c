@@ -6,27 +6,26 @@
 void shell_interactive(void)
 {
 	char *prompt = "($) ";
-	char *line = NULL;
 	size_t n = 0;
 
-	while (prompt_and_getline(prompt, &line, &n) != -1)
+	while (prompt_and_getline(prompt, &(info.line), &n) != -1)
 	{
 		(info.count)++;
 
-		if (is_empty(line) || line[0] == '#')
+		if (is_empty(info.line) || info.line[0] == '#')
 		{
-			free(line);
-			line = NULL;
+			free(info.line);
+			info.line = NULL;
 			continue;
 		}
 
-		interpret(line);
+		interpret(info.line);
 
-		free(line);
-		line = NULL;
+		free(info.line);
+		info.line = NULL;
 	}
 
-	free(line);
+	free(info.line);
 	write(STDOUT_FILENO, "\n", 1);
 }
 

@@ -6,23 +6,22 @@
  */
 void interpret(char *line)
 {
-	command_t *cmd;
 	void (*built_in)(char **av);
 
-	cmd = parse(line);
+	info.cmd = parse(line);
 
-	built_in = find_build_in(cmd->path);
+	built_in = find_build_in((info.cmd)->path);
 
 	if (built_in != NULL)
 	{
-		built_in(cmd->av);
+		built_in((info.cmd)->av);
 	}
 	else
 	{
-		exec(cmd);
-		free(cmd->path);
+		exec(info.cmd);
+		free((info.cmd)->path);
 	}
 
-	free(cmd->av);
-	free(cmd);
+	free((info.cmd)->av);
+	free(info.cmd);
 }
