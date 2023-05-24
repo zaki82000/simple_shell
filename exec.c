@@ -58,8 +58,14 @@ char *find_path(char *file)
 	char *PATH, *path, **dirs;
 	int i;
 
-	if (access(file, F_OK) == 0)
-		return (_strdup(file));
+	if (file[0] == '/' || (_strncmp(file, "./", 2) == 0) ||
+		(_strncmp(file, "../", 3) == 0))
+	{
+		if (access(file, F_OK) == 0)
+			return (_strdup(file));
+		else
+			return (NULL);
+	}
 
 	PATH = envdup("PATH");
 
@@ -79,7 +85,6 @@ char *find_path(char *file)
 		{
 			free(PATH);
 			free(dirs);
-
 			return (path);
 		}
 
