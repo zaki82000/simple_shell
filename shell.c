@@ -10,6 +10,8 @@ void init(void)
 	info.path = NULL;
 	info.count = 0;
 	info.line = NULL;
+	info.aliases = NULL;
+	info.variables = NULL;
 	info.cmd = NULL;
 	info.child_pid = 0;
 
@@ -36,14 +38,16 @@ int main(int ac, char **av)
 	{
 		FILE *file;
 
-		file = fopen(av[1], "r");
-
-		if (file != NULL)
+		if (access(av[1], R_OK | W_OK) == 0)
 		{
-			info.path = av[1];
-			shell_non_interactive(file);
+			file = fopen(av[1], "r");
+			if (file != NULL)
 
-			fclose(file);
+			{
+				info.path = av[1];
+				shell_non_interactive(file);
+				fclose(file);
+			}
 		}
 		else
 		{
@@ -63,6 +67,7 @@ int main(int ac, char **av)
 			shell_non_interactive(stdin);
 	}
 
+	free_variables(&(info.aliases));
 	free_variables(&(info.variables));
 
 	return (info.status);

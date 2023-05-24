@@ -12,6 +12,7 @@ void (*find_build_in(char *name))(char **av)
 	built_in_t built_ins[] = {
 		{"exit", _exit_},
 		{"env", _env_},
+		{"alias", _alias_},
 		{NULL, NULL}
 	};
 
@@ -53,6 +54,7 @@ void _exit_(char **av)
 			free(info.line);
 			free((info.cmd)->av);
 			free(info.cmd);
+			free_variables(&(info.aliases));
 			free_variables(&(info.variables));
 			exit(s);
 		}
@@ -69,6 +71,7 @@ void _exit_(char **av)
 		free(info.line);
 		free((info.cmd)->av);
 		free(info.cmd);
+		free_variables(&(info.aliases));
 		free_variables(&(info.variables));
 		exit(info.status);
 	}

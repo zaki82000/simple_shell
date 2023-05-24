@@ -20,6 +20,7 @@ command_t *parse(char *line)
 
 	tokens = create_tokens(line, " \n\t");
 
+	handle_aliases(tokens);
 	handle_variables(tokens);
 
 	cmd->path = tokens[0];
@@ -56,7 +57,8 @@ void handle_comments(char *line)
 void handle_variables(char **tokens)
 {
 	int i;
-	char *var;
+	variable_t *var;
+	char *env;
 
 	for (i = 0; tokens[i]; i++)
 	{
@@ -69,19 +71,39 @@ void handle_variables(char **tokens)
 
 			if (var != NULL)
 			{
-				tokens[i] = var;
+				tokens[i] = var->value;
 				continue;
 			}
 
-			var = getenv(&(tokens[i][1]));
+			env = getenv(&(tokens[i][1]));
 
-			if (var != NULL)
+			if (env != NULL)
 			{
-				tokens[i] = var;
+				tokens[i] = env;
 				continue;
 			}
 
-			tokens[i] = get_variable(info.variables, "NON");
+			var = get_variable(info.variables, "NON");
+			tokens[i] = var->value;
 		}
+	}
+}
+
+/**
+* handle_aliases - handles aliases replacement.
+* @tokens: an array of strings.
+*/
+void handle_aliases(char **tokens)
+{
+	variable_t *var;
+
+	var = get_variable(info.aliases, tokens[0]);
+
+	while (var != NULL)
+	{
+		if (var != NULL)
+			tokens[0] = var->value;
+
+		var = get_variable(info.aliases, tokens[0]);
 	}
 }

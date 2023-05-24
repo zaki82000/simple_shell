@@ -54,9 +54,16 @@ variable_t *new_variable(char *name, char *value);
 variable_t *set_variable(variable_t **head, char *name, char *value);
 void unset_variable(variable_t **head, char *name);
 void free_variables(variable_t **head);
-char *get_variable(variable_t *head, char *name);
+variable_t *get_variable(variable_t *head, char *name);
 
-/* _________ tokens.c __________ */
+/* __________ aliases.c __________*/
+
+void _alias_(char **av);
+void set_alias(variable_t **head, char *name_value);
+void print_alias(variable_t *head, char *name);
+void print_aliases(variable_t *head);
+
+/* __________ tokens.c __________ */
 
 char **create_tokens(char *line, char *d);
 
@@ -65,6 +72,7 @@ char **create_tokens(char *line, char *d);
 command_t *parse(char *line);
 void handle_comments(char *line);
 void handle_variables(char **tokens);
+void handle_aliases(char **tokens);
 
 /* __________ built_in.c __________ */
 
@@ -123,6 +131,7 @@ char *int_to_str(int num);
  * struct info - a struct that contians all global shell info.
  * @path: the path of the file.
  * @count: the lines count.
+ * @aliases: the aliases linked list
  * @variables: the variables linked list.
  * @line: a pointer to the line.
  * @cmd: a pointer to the command.
@@ -133,8 +142,9 @@ typedef struct info
 {
 	char *path;
 	int count;
-	variable_t *variables;
 	char *line;
+	variable_t *aliases;
+	variable_t *variables;
 	command_t *cmd;
 	pid_t child_pid;
 	int status;

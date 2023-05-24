@@ -126,14 +126,14 @@ void free_variables(variable_t **head)
  * @head: a pointer to pointer that points to the head of list.
  * @name: the name of the varible.
  *
- * Return: the value of the variable.
+ * Return: a pinter to the variable.
  */
-char *get_variable(variable_t *head, char *name)
+variable_t *get_variable(variable_t *head, char *name)
 {
 	while (head != NULL)
 	{
 		if (_strcmp(head->name, name) == 0)
-			return (head->value);
+			return (head);
 
 		head = head->next;
 	}
