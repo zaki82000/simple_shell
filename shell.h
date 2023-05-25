@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include <errno.h>
 #include <string.h>
@@ -14,6 +15,7 @@
 /* __________ shell_non_interactive.c __________ */
 
 void shell_non_interactive(FILE *file);
+void file_non_interactive(char *name);
 
 /* __________ shell_interactive.c __________ */
 

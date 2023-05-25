@@ -22,6 +22,7 @@ void init(void)
 	signal(SIGINT, handle_sigint);
 }
 
+
 /**
  * main - UNIX command line interpreter.
  * @ac: argument count.
@@ -35,30 +36,7 @@ int main(int ac, char **av)
 	info.path = av[0];
 
 	if (ac >= 2)
-	{
-		FILE *file;
-
-		if (access(av[1], R_OK | W_OK) == 0)
-		{
-			file = fopen(av[1], "r");
-			if (file != NULL)
-
-			{
-				info.path = av[1];
-				shell_non_interactive(file);
-				fclose(file);
-			}
-		}
-		else
-		{
-			set_status(2);
-
-			if (errno == ENOENT)
-				print_error("cannot open ", av[1], "No such file\n");
-			else
-				print_error("cannot open ", av[1], NULL);
-		}
-	}
+		file_non_interactive(av[1]);
 	else
 	{
 		if (isatty(STDIN_FILENO) == 1)

@@ -27,3 +27,44 @@ void shell_non_interactive(FILE *file)
 
 	free(info.line);
 }
+
+/**
+ * file_non_interactive - runs shell on non-interactive mode from a file.
+ * @name: the file name.
+ */
+void file_non_interactive(char *name)
+{
+	FILE *file;
+	struct stat st;
+
+	if (stat(name, &st) == -1)
+	{
+		dprintf(STDERR_FILENO,
+			"%s: %d: Can't open %s\n", info.path, info.count, name);
+		set_status(127);
+		return;
+	}
+
+	if (!S_ISREG(st.st_mode))
+	{
+		set_status(0);
+		return;
+	}
+
+	if (!(st.st_mode & S_IRUSR))
+	{
+		dprintf(STDERR_FILENO,
+			"%s: %d: Can't open %s\n", info.path, info.count, name);
+		set_status(127);
+		return;
+	}
+
+	file = fopen(name, "r");
+
+	if (file != NULL)
+	{
+		info.path = name;
+		shell_non_interactive(file);
+		fclose(file);
+	}
+}
